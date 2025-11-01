@@ -12,39 +12,39 @@ tasks:
     dir: install
   pihole-up:
     cmds:
-      - tailscale up --accept-routes --advertise-routes=172.21.0.0/16
-      - docker network create apps --subnet 172.21.0.0/16
-      - docker-compose up -d
+#      - tailscale up --accept-routes --advertise-routes=172.21.0.0/16
+#      - docker network create apps --subnet 172.21.0.0/16
+      - docker compose up -d
     dir: pihole
   transmission-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: transmission
   joal-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: joal
   stirling-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: stirling
   servarr-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: servarr
   vaultwarden-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: vaultwarden
   jellyfin-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: jellyfin
   jellyseerr-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: jellyseerr
   home-assistant-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: home-assistant
   portainer-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: portainer
   homepage-up:
-    cmd: docker-compose up -d
+    cmd: docker compose up -d
     dir: homepage
   start:
     cmds:
@@ -60,37 +60,37 @@ tasks:
       - task portainer-up
       - task homepage-up
   pihole-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: pihole
   transmission-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: transmission
   joal-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: joal
   stirling-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: stirling
   servarr-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: servarr
   vaultwarden-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: vaultwarden
   jellyfin-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: jellyfin
   jellyseerr-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: jellyseerr
   home-assistant-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: home-assistant
   portainer-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: portainer
   homepage-down:
-    cmd: docker-compose down
+    cmd: docker compose down
     dir: homepage
   teardown:
     cmds:
