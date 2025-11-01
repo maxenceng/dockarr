@@ -1,0 +1,40 @@
+services:
+  transmission:
+    image: linuxserver/transmission:4.0.6
+    container_name: transmission
+    network_mode: service:gluetun
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - TORRENTING_PORT=*this should match the port from gluetun*
+    volumes:
+      - ${CONFIG}/transmission:/config
+      - ${DOWNLOADS}:/downloads
+    restart: always
+    depends_on:
+      - gluetun
+  gluetun:
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    ports:
+      - "8888:8888/tcp"
+      - "8388:8388/tcp"
+      - "8388:8388/udp"
+      - "9091:9091/tcp"
+      - "51413:51413/tcp"
+      - "51413:51413/udp"
+    environment:
+      - VPN_SERVICE_PROVIDER=${GLUETUN_PROVIDER}
+      - VPN_TYPE=${GLUETUN_TYPE}
+      - OPENVPN_USER=${GLUETUN_USER}
+      - OPENVPN_PASSWORD=${GLUETUN_PASSWORD}
+      - TZ=Europe/Amsterdam
+      - SERVER_REGIONS=${GLUETUN_REGION}
+    volumes:
+      - ${CONFIG}/gluetun:/gluetun
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    restart: always

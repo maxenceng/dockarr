@@ -1,0 +1,56 @@
+# Source: https://github.com/2Tiny2Scale/ScaleTail/blob/main/services/jellyfin/docker-compose.yml
+
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.88.4
+    container_name: tailscale-jellyfin
+    hostname: jellyfin${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ./config:/config
+      - ${CONFIG}/ts/state/jellyfin:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  jellyfin:
+    image: linuxserver/jellyfin:10.10.7
+    network_mode: service:tailscale
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - JELLYFIN_FFmpeg__probesize=50000000
+      - JELLYFIN_FFmpeg__analyzeduration=50000000
+    volumes:
+      - ${CONFIG}/jellyfin:/config
+      - ${DATA}/movies:/movies
+      - ${DATA}/movies-anime:/movies-anime
+      - ${DATA}/tv:/tv
+      - ${DATA}/tv-anime:/tv-anime
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "pgrep", "-f", "jellyfin" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: always

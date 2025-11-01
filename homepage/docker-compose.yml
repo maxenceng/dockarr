@@ -1,0 +1,52 @@
+# Source: https://github.com/2Tiny2Scale/ScaleTail/blob/main/services/homepage/docker-compose.yml
+
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.88.4
+    container_name: tailscale-homepage
+    hostname: homepage${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ./config:/config
+      - ${CONFIG}/ts/state/homepage:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  homepage:
+    image: ghcr.io/gethomepage/homepage:v1.5.0
+    network_mode: service:tailscale
+    container_name: homepage
+    networks:
+      - dockarr
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=*
+    volumes:
+      - ${CONFIG}/homepage:/app/config
+      - ${CONFIG}/images:/app/public/images
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "next-server"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: always

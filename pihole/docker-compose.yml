@@ -1,0 +1,28 @@
+# /etc/systemd/resolved.conf -> DNSStubListener=no
+# systemctl restart systemd-resolved
+# netstat -tuln | grep :53 -> Nothing
+
+services:
+  pihole:
+    image: pihole/pihole:2025.10.3
+    container_name: pihole
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Amsterdam
+      - VIRTUAL_HOST=pi.hole
+      - PROXY_LOCATION=pi.hole
+      - ServerIP=127.0.0.1
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    volumes:
+      - ${CONFIG}/etc-pihole:/etc/pihole
+      - ${CONFIG}/etc-dnsmasq.d:/etc/dnsmasq.d
+    restart: always
+    networks:
+      apps:
+        ipv4_address: 172.21.0.2
+networks:
+  apps:
+    external: true
