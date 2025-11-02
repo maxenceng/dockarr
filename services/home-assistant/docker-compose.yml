@@ -1,10 +1,10 @@
-# Source: https://github.com/2Tiny2Scale/ScaleTail/blob/main/services/jellyseerr/docker-compose.yml
+# Source: https://github.com/2Tiny2Scale/ScaleTail/blob/main/services/home-assistant/docker-compose.yml
 
 services:
   tailscale:
     image: tailscale/tailscale:v1.88.4
-    container_name: tailscale-jellyseerr
-    hostname: jellyseerr${SUFFIX}
+    container_name: tailscale-home-assistant
+    hostname: home-assistant${SUFFIX}
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
       - TS_STATE_DIR=/var/lib/tailscale
@@ -16,7 +16,7 @@ services:
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
     volumes:
       - ./config:/config
-      - ${CONFIG}/ts/state/jellyseerr:/var/lib/tailscale
+      - ${CONFIG}/ts/state/home-assistant:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
@@ -28,23 +28,22 @@ services:
       retries: 3
       start_period: 10s
     restart: always
-  jellyseerr:
-    image: fallenbagel/jellyseerr:2.7.3
+  home-assistant:
+    image: linuxserver/homeassistant:2025.8.3
     network_mode: service:tailscale
-    container_name: jellyseerr
+    container_name: home-assistant
+    privileged: true
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Amsterdam
-      - LOG_LEVEL=debug
-      - PORT=5055
     volumes:
-      - ${CONFIG}/jellyseerr:/app/config
+      - ${CONFIG}/home-assistant:/config
     depends_on:
       tailscale:
         condition: service_healthy
     healthcheck:
-      test: [ "CMD", "pgrep", "-f", "yarn" ]
+      test: "curl --fail http://localhost:8123/ || exit 1"
       interval: 1m
       timeout: 10s
       retries: 3
