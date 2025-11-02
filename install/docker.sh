@@ -8,3 +8,8 @@ add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(
 apt update
 apt install docker-ce
 systemctl status docker
+cp docker/daemon.json /etc/docker/
+mkdir /etc/systemd/system/docker.service.d/
+cp docker/override.conf /etc/systemd/system/docker.service.d/
+systemctl daemon-reload
+systemctl restart docker.service
