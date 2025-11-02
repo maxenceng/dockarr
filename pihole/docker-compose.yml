@@ -13,6 +13,12 @@ services:
       - VIRTUAL_HOST=pi.hole
       - PROXY_LOCATION=pi.hole
       - ServerIP=127.0.0.1
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+      - "67:67/udp"
     dns:
       - 127.0.0.1
       - 1.1.1.1
@@ -23,6 +29,8 @@ services:
     networks:
       apps:
         ipv4_address: 172.21.0.2
+    cap_add:
+      - NET_ADMIN
 networks:
   apps:
     external: true
