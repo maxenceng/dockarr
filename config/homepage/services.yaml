@@ -133,6 +133,11 @@
         icon: joplin.svg
         href: JOAL_HREF
         description: Ratio Manager
+    - FileGator:
+        icon: filegator.svg
+        href: FILEGATOR_HREF
+        description: File Management
+        siteMonitor: FILEGATOR_HREF
 
 - Life Style:
     - Mealie:

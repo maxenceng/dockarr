@@ -7,7 +7,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Amsterdam
-      - TORRENTING_PORT=*this should match the port from gluetun*
     volumes:
       - ${CONFIG}/transmission:/config
       - ${DOWNLOADS}:/downloads
