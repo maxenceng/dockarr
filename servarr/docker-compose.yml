@@ -80,3 +80,6 @@ services:
     restart: always
     ports:
       - "6767:6767"
+networks:
+  dockarr:
+    external: true
