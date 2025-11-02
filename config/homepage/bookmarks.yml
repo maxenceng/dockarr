@@ -1,0 +1,17 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/bookmarks
+
+- Bookmarks:
+    - Github:
+        - icon: github-light.png
+          href: https://github.com/
+    - Reddit:
+        - icon: reddit.svg
+          href: https://old.reddit.com/
+    - YouTube:
+        - icon: youtube.svg
+          href: https://youtube.com/
+    - Twitch:
+        - icon: twitch.svg
+          href: https://twitch.tv/

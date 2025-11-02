@@ -15,43 +15,43 @@ tasks:
   pihole-up:
     cmds:
       - docker compose up -d
-    dir: pihole
+    dir: services/pihole
   transmission-up:
     cmd: docker compose up -d
-    dir: transmission
+    dir: services/transmission
   joal-up:
     cmd: docker compose up -d
-    dir: joal
+    dir: services/joal
   cloudbeaver-up:
     cmd: docker compose up -d
-    dir: cloudbeaver
+    dir: services/cloudbeaver
   stirling-up:
     cmd: docker compose up -d
-    dir: stirling
+    dir: services/stirling
   servarr-up:
     cmd: docker compose up -d
-    dir: servarr
+    dir: services/servarr
   mealie-up:
     cmd: docker compose up -d
-    dir: mealie
+    dir: services/mealie
   vaultwarden-up:
     cmd: docker compose up -d
-    dir: vaultwarden
+    dir: services/vaultwarden
   jellyfin-up:
     cmd: docker compose up -d
-    dir: jellyfin
+    dir: services/jellyfin
   jellyseerr-up:
     cmd: docker compose up -d
-    dir: jellyseerr
+    dir: services/jellyseerr
   home-assistant-up:
     cmd: docker compose up -d
-    dir: home-assistant
+    dir: services/home-assistant
   portainer-up:
     cmd: docker compose up -d
-    dir: portainer
+    dir: services/portainer
   homepage-up:
     cmd: docker compose up -d
-    dir: homepage
+    dir: services/homepage
   start:
     cmds:
       - task pihole-up
@@ -66,45 +66,49 @@ tasks:
       - task home-assistant-up
       - task portainer-up
       - task homepage-up
+  setup-config:
+    cmds:
+      - sh homepage-setup.sh
+    dir: config
   pihole-down:
     cmd: docker compose down
-    dir: pihole
+    dir: services/pihole
   transmission-down:
     cmd: docker compose down
-    dir: transmission
+    dir: services/transmission
   joal-down:
     cmd: docker compose down
-    dir: joal
+    dir: services/joal
   cloudbeaver-down:
     cmd: docker compose down
-    dir: cloudbeaver
+    dir: services/cloudbeaver
   stirling-down:
     cmd: docker compose down
-    dir: stirling
+    dir: services/stirling
   servarr-down:
     cmd: docker compose down
-    dir: servarr
+    dir: services/servarr
   mealie-down:
     cmd: docker compose down
-    dir: mealie
+    dir: services/mealie
   vaultwarden-down:
     cmd: docker compose down
-    dir: vaultwarden
+    dir: services/vaultwarden
   jellyfin-down:
     cmd: docker compose down
-    dir: jellyfin
+    dir: services/jellyfin
   jellyseerr-down:
     cmd: docker compose down
-    dir: jellyseerr
+    dir: services/jellyseerr
   home-assistant-down:
     cmd: docker compose down
-    dir: home-assistant
+    dir: services/home-assistant
   portainer-down:
     cmd: docker compose down
-    dir: portainer
+    dir: services/portainer
   homepage-down:
     cmd: docker compose down
-    dir: homepage
+    dir: services/homepage
   teardown:
     cmds:
       - docker stop $(docker ps -aq)

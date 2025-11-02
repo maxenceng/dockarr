@@ -1,0 +1,143 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/services
+
+- Media:
+    - JellySeerr:
+        icon: jellyseerr.svg
+        href: JELLYSEERR_HREF
+        description: Media Requests
+        siteMonitor: http://jellyseerr:5055
+        widget:
+          type: jellyseerr
+          url: http://jellyseerr:5055
+          key: JELLYSEERR_KEY
+    - JellyFin:
+        icon: jellyfin.svg
+        href: JELLYFIN_HREF
+        description: Media Viewer
+        siteMonitor: http://jellyfin:8096
+        widget:
+          type: jellyfin
+          url: http://jellyfin:8096
+          key: JELLYFIN_KEY
+
+- Downloads:
+    - Sonarr:
+        icon: sonarr.svg
+        href: SONARR_HREF
+        description: TV Show Manager
+        siteMonitor: http://sonarr:8989
+        widget:
+          type: sonarr
+          url: http://sonarr:8989
+          key: SONARR_KEY
+    - Sonarr Anime:
+        icon: sonarr.svg
+        href: SONARR_ANIME_HREF
+        description: TV Anime Manager
+        siteMonitor: http://sonarr-anime:8989
+        widget:
+          type: sonarr
+          url: http://sonarr-anime:8989
+          key: SONARR_ANIME_KEY
+    - Radarr:
+        icon: radarr.svg
+        href: RADARR_HREF
+        description: Movie Manager
+        siteMonitor: http://radarr:7878
+        widget:
+          type: radarr
+          url: http://radarr:7878
+          key: RADARR_KEY
+    - Radarr Anime:
+        icon: radarr.svg
+        href: RADARR_ANIME_HREF
+        description: Anime Movie Manager
+        siteMonitor: http://radarr-anime:7878
+        widget:
+          type: radarr
+          url: http://radarr-anime:7878
+          key: RADARR_ANIME_KEY
+    - Prowlarr:
+        icon: prowlarr.svg
+        href: PROWLARR_HREF
+        description: Indexer Manager
+        siteMonitor: http://prowlarr:9696
+        widget:
+          type: prowlarr
+          url: http://prowlarr:9696
+          key: PROWLARR_KEY
+    - Transmission:
+        icon: transmission.svg
+        href: TRANSMISSION_HREF
+        description: Torrent Downloader
+        siteMonitor: http://transmission:9091
+        widget:
+          type: transmission
+          url: http://transmission:9091
+          username: ""
+          password: TRANSMISSION_KEY
+          rpcUrl: /transmission/
+- Utils:
+    - Bazarr:
+        icon: bazarr.svg
+        href: BAZARR_HREF
+        description: Subtitles Manager
+        siteMonitor: http://bazarr:6767
+        widget:
+          type: bazarr
+          url: http://bazarr:6767
+          key: BAZARR_KEY
+    - Stirling:
+        icon: stirling-pdf.svg
+        href: STIRLING_HREF
+        description: PDF Manager
+        siteMonitor: http://stirling:8080
+    - HomeAssistant:
+        icon: home-assistant.svg
+        href: HOME_ASSISTANT_HREF
+        description: Home Assistant
+        siteMonitor: http://home-assistant:8123
+        widget:
+          type: homeassistant
+          url: http://home-assistant:8123
+          key: HOME_ASSISTANT_KEY
+
+- Management:
+    - PiHole:
+        icon: pi-hole.svg
+        href: PIHOLE_HREF
+        description: DNS AdBlocker
+        widget:
+          type: pihole
+          url: PIHOLE_URL
+          key: PIHOLE_KEY
+    - CloudBeaver:
+        icon: cloudbeaver.svg
+        href: CLOUD_BEAVER_HREF
+        description: Database Manager
+    - Portainer:
+        icon: kubernetes.svg
+        href: PORTAINER_HREF
+        description: Docker Dashboard
+    - Joal:
+        icon: joplin.svg
+        href: JOAL_HREF
+        description: Ratio Manager
+
+- Life Style:
+    - Mealie:
+        icon: mealie.svg
+        href: MEALIE_HREF
+        description: Recipes & Ingredient List
+        siteMonitor: http://mealie:9000
+        widget:
+          type: mealie
+          url: http://mealie:9000
+          key: MEALIE_HREF
+    - Vaultwarden:
+        icon: bitwarden.svg
+        href: VAULTWARDEN_HREF
+        description: Password Manager
+        siteMonitor: http://vaultwarden:80

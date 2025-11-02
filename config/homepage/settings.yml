@@ -1,0 +1,51 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/latest/configs/settings
+
+title: HomeLab
+background:
+  image: IMAGE_PATH
+  blur: sm
+  saturate: 50
+  opacity: 50
+
+theme: dark
+color: slate
+headerStyle: clean
+target: _blank
+hideVersion: true
+hideErrors: true
+useEqualHeights: true
+statusStyle: dot
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: true
+  hideVisitURL: true
+
+layout:
+  Media:
+    style: row
+    columns: 2
+    disableCollapse: true
+  Life Style:
+    style: row
+    columns: 2
+    header: false
+  Management:
+    style: row
+    columns: 4
+    initiallyCollapsed: true
+  Downloads:
+    style: row
+    columns: 3
+    header: false
+  Utils:
+    style: row
+    columns: 3
+    header: false
+  Bookmarks:
+    style: row
+    columns: 4
+    header: false
