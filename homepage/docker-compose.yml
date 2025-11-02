@@ -32,8 +32,6 @@ services:
     image: ghcr.io/gethomepage/homepage:v1.5.0
     network_mode: service:tailscale
     container_name: homepage
-    networks:
-      - dockarr
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=*
     volumes:

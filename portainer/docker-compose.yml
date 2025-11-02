@@ -32,8 +32,6 @@ services:
     image: portainer/portainer-ce:2.35.0
     network_mode: service:tailscale
     container_name: portainer
-    networks:
-      - dockarr
     environment:
       - PUID=1000
       - PGID=1000
