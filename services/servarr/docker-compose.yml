@@ -57,14 +57,13 @@ services:
     restart: always
     ports:
       - "9696:9696"
-  flaresolverr:
-    image: alexfozor/flaresolverr:pr-1300-experimental
-    container_name: flaresolverr
+  byparr:
+    image: ghcr.io/thephaseless/byparr:latest
+    container_name: byparr
     networks:
       - dockarr
     environment:
       - TZ=Europe/London
-      - CAPTCHA_SOLVER=none
     restart: always
     ports:
       - "8191:8191"
