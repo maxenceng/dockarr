@@ -30,7 +30,7 @@ services:
       - OPENVPN_USER=${GLUETUN_USER}
       - OPENVPN_PASSWORD=${GLUETUN_PASSWORD}
       - TZ=Europe/Amsterdam
-      - SERVER_REGIONS=${GLUETUN_REGION}
+      - SERVER_COUNTRIES=${GLUETUN_COUNTRIES}
     volumes:
       - ${CONFIG}/gluetun:/gluetun
     devices:
