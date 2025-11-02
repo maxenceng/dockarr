@@ -27,55 +27,55 @@
         icon: sonarr.svg
         href: SONARR_HREF
         description: TV Show Manager
-        siteMonitor: http://sonarr:8989
+        siteMonitor: SONARR_HREF
         widget:
           type: sonarr
-          url: http://sonarr:8989
+          url: SONARR_HREF
           key: SONARR_KEY
     - Sonarr Anime:
         icon: sonarr.svg
         href: SONARR_ANIME_HREF
         description: TV Anime Manager
-        siteMonitor: http://sonarr-anime:8989
+        siteMonitor: SONARR_ANIME_HREF
         widget:
           type: sonarr
-          url: http://sonarr-anime:8989
+          url: SONARR_ANIME_HREF
           key: SONARR_ANIME_KEY
     - Radarr:
         icon: radarr.svg
         href: RADARR_HREF
         description: Movie Manager
-        siteMonitor: http://radarr:7878
+        siteMonitor: RADARR_HREF
         widget:
           type: radarr
-          url: http://radarr:7878
+          url: RADARR_HREF
           key: RADARR_KEY
     - Radarr Anime:
         icon: radarr.svg
         href: RADARR_ANIME_HREF
         description: Anime Movie Manager
-        siteMonitor: http://radarr-anime:7878
+        siteMonitor: RADARR_ANIME_HREF
         widget:
           type: radarr
-          url: http://radarr-anime:7878
+          url: RADARR_ANIME_HREF
           key: RADARR_ANIME_KEY
     - Prowlarr:
         icon: prowlarr.svg
         href: PROWLARR_HREF
         description: Indexer Manager
-        siteMonitor: http://prowlarr:9696
+        siteMonitor: PROWLARR_HREF
         widget:
           type: prowlarr
-          url: http://prowlarr:9696
+          url: PROWLARR_HREF
           key: PROWLARR_KEY
     - Transmission:
         icon: transmission.svg
         href: TRANSMISSION_HREF
         description: Torrent Downloader
-        siteMonitor: http://transmission:9091
+        siteMonitor: TRANSMISSION_HREF
         widget:
           type: transmission
-          url: http://transmission:9091
+          url: TRANSMISSION_HREF
           username: ""
           password: TRANSMISSION_KEY
           rpcUrl: /transmission/
@@ -84,10 +84,10 @@
         icon: bazarr.svg
         href: BAZARR_HREF
         description: Subtitles Manager
-        siteMonitor: http://bazarr:6767
+        siteMonitor: BAZARR_HREF
         widget:
           type: bazarr
-          url: http://bazarr:6767
+          url: BAZARR_HREF
           key: BAZARR_KEY
     - Stirling:
         icon: stirling-pdf.svg
@@ -109,18 +109,26 @@
         icon: pi-hole.svg
         href: PIHOLE_HREF
         description: DNS AdBlocker
+        siteMonitor: http://pihole
         widget:
           type: pihole
-          url: PIHOLE_URL
+          url: http://pihole
           key: PIHOLE_KEY
     - CloudBeaver:
         icon: cloudbeaver.svg
         href: CLOUD_BEAVER_HREF
         description: Database Manager
+        siteMonitor: CLOUD_BEAVER_HREF
     - Portainer:
         icon: kubernetes.svg
         href: PORTAINER_HREF
         description: Docker Dashboard
+        siteMonitor: http://portainer:9000
+        widget:
+          type: portainer
+          url: http://portainer:9000
+          env: 3
+          key: PORTAINER_KEY
     - Joal:
         icon: joplin.svg
         href: JOAL_HREF
@@ -135,9 +143,9 @@
         widget:
           type: mealie
           url: http://mealie:9000
-          key: MEALIE_HREF
+          key: MEALIE_KEY
     - Vaultwarden:
         icon: bitwarden.svg
         href: VAULTWARDEN_HREF
         description: Password Manager
-        siteMonitor: http://vaultwarden:80
+        siteMonitor: http://vaultwarden
