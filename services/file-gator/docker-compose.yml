@@ -1,0 +1,14 @@
+services:
+  file-gator:
+    image: filegator/filegator:v7.13.0
+    container_name: file-gator
+    networks:
+      - dockarr
+    volumes:
+      - ${DATA}:/var/www/filegator/repository
+    restart: always
+    ports:
+      - "8080:8080"
+networks:
+  dockarr:
+    external: true

@@ -69,6 +69,7 @@ tasks:
   setup-config:
     cmds:
       - sh homepage-setup.sh
+      - sh home-assistant-setup.sh
     dir: config
   pihole-down:
     cmd: docker compose down
