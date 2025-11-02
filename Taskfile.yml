@@ -10,6 +10,7 @@ tasks:
       - chmod +x tailscale.sh
       - sh docker.sh
       - sh pihole-setup.sh
+      - sh joal-setup.sh
     dir: install
   pihole-up:
     cmds:
