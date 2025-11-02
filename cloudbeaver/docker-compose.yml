@@ -1,0 +1,14 @@
+services:
+  cloudbeaver:
+    image: dbeaver/cloudbeaver:25.2.3
+    container_name: cloudbeaver
+    volumes:
+      - ${CONFIG}/cloudbeaver:/opt/cloudbeaver/workspace
+    ports:
+      - "8978:8978"
+    restart: always
+    networks:
+      - dockarr
+networks:
+  dockarr:
+    external: true

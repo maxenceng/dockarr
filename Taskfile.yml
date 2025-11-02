@@ -22,12 +22,18 @@ tasks:
   joal-up:
     cmd: docker compose up -d
     dir: joal
+  cloudbeaver-up:
+    cmd: docker compose up -d
+    dir: cloudbeaver
   stirling-up:
     cmd: docker compose up -d
     dir: stirling
   servarr-up:
     cmd: docker compose up -d
     dir: servarr
+  mealie-up:
+    cmd: docker compose up -d
+    dir: mealie
   vaultwarden-up:
     cmd: docker compose up -d
     dir: vaultwarden
@@ -53,6 +59,7 @@ tasks:
       - task joal-up
       - task stirling-up
       - task servarr-up
+      - task mealie-up
       - task vaultwarden-up
       - task jellyfin-up
       - task jellyseerr-up
@@ -68,12 +75,18 @@ tasks:
   joal-down:
     cmd: docker compose down
     dir: joal
+  cloudbeaver-down:
+    cmd: docker compose down
+    dir: cloudbeaver
   stirling-down:
     cmd: docker compose down
     dir: stirling
   servarr-down:
     cmd: docker compose down
     dir: servarr
+  mealie-down:
+    cmd: docker compose down
+    dir: mealie
   vaultwarden-down:
     cmd: docker compose down
     dir: vaultwarden

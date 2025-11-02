@@ -1,0 +1,45 @@
+# Source: https://github.com/2Tiny2Scale/ScaleTail/blob/main/services/mealie/docker-compose.yml
+
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.88.4
+    container_name: tailscale-mealie
+    hostname: mealie${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ./config:/config
+      - ${CONFIG}/ts/state/mealie:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v3.4.0
+    network_mode: service:tailscale
+    container_name: mealie
+    environment:
+      ALLOW_SIGNUP: "false"
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Amsterdam
+    volumes:
+      - ${CONFIG}/mealie:/app/data
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    restart: always
