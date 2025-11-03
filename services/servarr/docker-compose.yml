@@ -48,7 +48,7 @@ services:
     ports:
       - "8878:7878"
   prowlarr:
-    image: linuxserver/prowlarr:2.0.5
+    image: linuxserver/prowlarr:2.1.5
     container_name: prowlarr
     networks:
       - dockarr
