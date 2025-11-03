@@ -57,9 +57,9 @@ services:
     restart: always
     ports:
       - "9696:9696"
-  byparr:
-    image: ghcr.io/thephaseless/byparr:latest
-    container_name: byparr
+  flaresolverr:
+    image: flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
     networks:
       - dockarr
     environment:
