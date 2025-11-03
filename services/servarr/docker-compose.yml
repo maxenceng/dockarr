@@ -64,6 +64,9 @@ services:
       - dockarr
     environment:
       - TZ=Europe/London
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LOG_HTML=${LOG_HTML:-false}
+      - CAPTCHA_SOLVER=${CAPTCHA_SOLVER:-none}
     restart: always
     ports:
       - "8191:8191"
