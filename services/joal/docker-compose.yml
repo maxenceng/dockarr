@@ -5,8 +5,6 @@ services:
     network_mode: service:gluetun
     volumes:
       - ${CONFIG}/joal:/data
-    ports:
-      - "1234:1234"
     command: ["--joal-conf=/data", "--spring.main.web-environment=true", "--server.port=1234", "--joal.ui.path.prefix=seed", "--joal.ui.secret-token=abc"]
     restart: always
     depends_on:
