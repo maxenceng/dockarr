@@ -2,6 +2,7 @@ version: 3
 
 dotenv:
   - .env
+  - .homepage.env
 
 tasks:
   install:
@@ -75,8 +76,6 @@ tasks:
       - sh homepage-setup.sh
       - sh home-assistant-setup.sh
     dir: config
-    dotenv:
-      - .homepage.env
   pihole-down:
     cmd: docker compose down
     dir: services/pihole

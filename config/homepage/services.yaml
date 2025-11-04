@@ -77,7 +77,7 @@
           type: transmission
           url: TRANSMISSION_HREF
           username: ""
-          password: TRANSMISSION_KEY
+          password: "TRANSMISSION_KEY"
           rpcUrl: /transmission/
 - Utils:
     - Bazarr:
