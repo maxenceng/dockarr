@@ -1,3 +1,3 @@
 #!/bin/bash
 
-cp home-assistant/* $CONFIG/ home-assistant/
+cp home-assistant/* $CONFIG/home-assistant/
