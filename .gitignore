@@ -1,4 +1,5 @@
 *.iml
 .idea
 .env
+.homepage.env
 TODO.md

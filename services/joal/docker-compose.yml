@@ -23,7 +23,7 @@ services:
       - TZ=Europe/Amsterdam
       - SERVER_COUNTRIES=${GLUETUN_COUNTRIES}
     volumes:
-      - ${CONFIG}/gluetun:/gluetun
+      - ${CONFIG}/gluetun-joal:/gluetun
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:

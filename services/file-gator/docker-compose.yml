@@ -5,7 +5,7 @@ services:
     networks:
       - dockarr
     volumes:
-      - ${DATA}:/var/www/filegator/repository
+      - ${DOWNLOADS}:/var/www/filegator/repository
     restart: always
     ports:
       - "8080:8080"
