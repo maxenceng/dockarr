@@ -53,6 +53,9 @@ tasks:
   file-gator-up:
     cmd: docker compose up -d
     dir: services/file-gator
+  n8n-up:
+    cmd: docker compose up -d
+    dir: services/n8n
   homepage-up:
     cmd: docker compose up -d
     dir: services/homepage
@@ -70,6 +73,7 @@ tasks:
       - task home-assistant-up
       - task portainer-up
       - task file-gator-up
+      - task n8n-up
       - task homepage-up
   setup-config:
     cmds:
@@ -115,6 +119,9 @@ tasks:
   file-gator-down:
     cmd: docker compose down
     dir: services/file-gator
+  n8n-down:
+    cmd: docker compose down
+    dir: services/n8n
   homepage-down:
     cmd: docker compose down
     dir: services/homepage

@@ -1,0 +1,18 @@
+services:
+  sonarr:
+    image: docker.n8n.io/n8nio/n8n:1.119.2
+    container_name: n8n
+    networks:
+      - dockarr
+    environment:
+      - TZ=Europe/London
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_RUNNERS_ENABLED=true
+    volumes:
+      - ${CONFIG}/n8n:/home/node/.n8n
+    restart: always
+    ports:
+      - "5678:5678"
+networks:
+  dockarr:
+    external: true
