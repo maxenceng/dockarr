@@ -154,3 +154,8 @@
         href: VAULTWARDEN_HREF
         description: Password Manager
         siteMonitor: http://vaultwarden
+    - n8n:
+        icon: n8n.svg
+        href: N8N_HREF
+        description: Automation
+        siteMonitor: http://n8n
