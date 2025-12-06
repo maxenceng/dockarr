@@ -56,6 +56,9 @@ tasks:
   n8n-up:
     cmd: docker compose up -d
     dir: services/n8n
+  wiki-up:
+    cmd: docker compose up -d
+    dir: services/wiki
   homepage-up:
     cmd: docker compose up -d
     dir: services/homepage
@@ -74,6 +77,7 @@ tasks:
       - task portainer-up
       - task file-gator-up
       - task n8n-up
+      - task wiki-up
       - task homepage-up
   setup-config:
     cmds:
@@ -122,6 +126,9 @@ tasks:
   n8n-down:
     cmd: docker compose down
     dir: services/n8n
+  wiki-down:
+    cmd: docker compose down
+    dir: services/wiki
   homepage-down:
     cmd: docker compose down
     dir: services/homepage
