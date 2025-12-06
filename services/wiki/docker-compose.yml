@@ -32,7 +32,7 @@ services:
     container_name: wiki
     environment:
       - DB_TYPE=sqlite
-      - DB_STORAGE=/var/db.sqlite
+      - DB_FILEPATH=/var/db.sqlite
     volumes:
       - ${CONFIG}/wiki:/var
     depends_on:
