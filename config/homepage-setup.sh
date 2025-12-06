@@ -51,3 +51,7 @@ sed -i "s@MEALIE_HREF@$MEALIE_HREF@g" $CONFIG/homepage/services.yaml
 sed -i "s@MEALIE_KEY@$MEALIE_KEY@g" $CONFIG/homepage/services.yaml
 
 sed -i "s@VAULTWARDEN_HREF@$VAULTWARDEN_HREF@g" $CONFIG/homepage/services.yaml
+
+sed -i "s@N8N_HREF@$N8N_HREF@g" $CONFIG/homepage/services.yaml
+
+sed -i "s@WIKI_HREF@$WIKI_HREF@g" $CONFIG/homepage/services.yaml

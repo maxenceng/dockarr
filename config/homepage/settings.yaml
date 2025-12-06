@@ -27,11 +27,11 @@ quicklaunch:
 layout:
   Media:
     style: row
-    columns: 2
+    columns: 3
     disableCollapse: true
   Life Style:
     style: row
-    columns: 2
+    columns: 3
     header: false
   Management:
     style: row

@@ -21,6 +21,11 @@
           type: jellyfin
           url: http://jellyfin:8096
           key: JELLYFIN_KEY
+    - Wiki:
+        icon: wikijs.svg
+        href: WIKI_HREF
+        description: Wiki
+        siteMonitor: http://wiki:3000
 
 - Downloads:
     - Sonarr:
@@ -158,4 +163,4 @@
         icon: n8n.svg
         href: N8N_HREF
         description: Automation
-        siteMonitor: http://n8n
+        siteMonitor: http://n8n:5678

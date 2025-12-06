@@ -1,0 +1,41 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.88.4
+    container_name: tailscale-wiki
+    hostname: wiki${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ./config:/config
+      - ${CONFIG}/ts/state/wiki:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  wiki:
+    image: requarks/wiki:2.5
+    network_mode: service:tailscale
+    container_name: wiki
+    environment:
+      - DB_TYPE=sqlite
+      - DB_STORAGE=/var/db.sqlite
+    volumes:
+      - ${CONFIG}/wiki:/var
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    restart: always
