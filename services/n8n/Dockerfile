@@ -1,6 +1,9 @@
 # Start from the official n8n image (which is Alpine-based)
 FROM n8nio/n8n:1.123.3
 
+USER node
+RUN npm install n8n-nodes-playwright
+
 # Switch to root user temporarily to install system dependencies
 USER root
 
