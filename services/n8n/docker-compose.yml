@@ -27,9 +27,7 @@ services:
       start_period: 10s
     restart: always
   n8n:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: n8nio/n8n:1.123.3
     network_mode: service:tailscale
     container_name: n8n
     environment:
@@ -39,9 +37,6 @@ services:
       - N8N_SECURE_COOKIE=false
       - WEBHOOK_URL=https://n8n.${TS_DOMAIN}
       - N8N_EDITOR_BASE_URL=https://n8n.${TS_DOMAIN}
-      - NODE_FUNCTION_ALLOW_EXTERNAL=playwright
-      - PLAYWRIGHT_BROWSERS_PATH=/usr/local/lib/node_modules/playwright/.local-browsers
-      - N8N_RUNNERS_MAX_OLD_SPACE_SIZE=4096
     volumes:
       - ${CONFIG}/n8n:/home/node/.n8n
     depends_on:
