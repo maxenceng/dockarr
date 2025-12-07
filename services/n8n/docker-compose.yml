@@ -39,6 +39,7 @@ services:
       - N8N_SECURE_COOKIE=false
       - WEBHOOK_URL=https://n8n.${TS_DOMAIN}
       - N8N_EDITOR_BASE_URL=https://n8n.${TS_DOMAIN}
+      - PLAYWRIGHT_BROWSERS_PATH=/usr/local/lib/node_modules/playwright/.local-browsers
     volumes:
       - ${CONFIG}/n8n:/home/node/.n8n
     depends_on:
