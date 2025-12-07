@@ -41,8 +41,8 @@ services:
       - PGID=1000
       - TZ=Europe/Amsterdam
     volumes:
-      - ./${CONFIG}/etc-pihole:/etc/pihole
-      - ./${CONFIG}/etc-dnsmasq.d:/etc/dnsmasq.d
+      - ${CONFIG}/etc-pihole:/etc/pihole
+      - ${CONFIG}/etc-dnsmasq.d:/etc/dnsmasq.d
     depends_on:
       tailscale:
         condition: service_healthy

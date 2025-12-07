@@ -54,7 +54,9 @@ tasks:
     cmd: docker compose up -d
     dir: services/file-gator
   n8n-up:
-    cmd: docker compose up -d
+    cmds:
+      - docker compose build
+      - docker compose up -d
     dir: services/n8n
   wiki-up:
     cmd: docker compose up -d
