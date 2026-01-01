@@ -63,7 +63,7 @@ services:
     networks:
       - dockarr
     volumes:
-      - ${CONFIG}/jackett:/jackett
+      - ${CONFIG}/jackett:/config
     restart: always
     ports:
       - "9117:9117"

@@ -94,6 +94,15 @@
           type: bazarr
           url: BAZARR_HREF
           key: BAZARR_KEY
+    - Jackett:
+        icon: jackett.svg
+        href: JACKETT_HREF
+        description: Indexer Manager
+        siteMonitor: JACKETT_HREF
+        widget:
+          type: jackett
+          url: JACKETT_HREF
+          password: JACKETT_KEY
     - Stirling:
         icon: stirling-pdf.svg
         href: STIRLING_HREF

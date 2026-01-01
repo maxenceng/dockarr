@@ -43,7 +43,7 @@ layout:
     header: false
   Utils:
     style: row
-    columns: 3
+    columns: 4
     header: false
   Bookmarks:
     style: row
