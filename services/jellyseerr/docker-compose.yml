@@ -29,7 +29,7 @@ services:
       start_period: 10s
     restart: always
   jellyseerr:
-    image: ghcr.io/seerr-team/seerr:3.0.1
+    image: ghcr.io/seerr-team/seerr:v3.0.1
     init: true
     network_mode: service:tailscale
     container_name: jellyseerr
