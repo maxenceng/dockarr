@@ -29,7 +29,8 @@ services:
       start_period: 10s
     restart: always
   jellyseerr:
-    image: fallenbagel/jellyseerr:2.7.3
+    image: ghcr.io/seerr-team/seerr:3.0.1
+    init: true
     network_mode: service:tailscale
     container_name: jellyseerr
     environment:
