@@ -1,29 +1,38 @@
 services:
-  gluetunp:
-    image: qmcgaw/gluetun
-    container_name: gluetunp
-    ports:
-      - "9898:9696"
+  tailscale:
+    image: tailscale/tailscale:v1.88.4
+    container_name: tailscale-prowlarrvpn
+    hostname: prowlarrvpn
     environment:
-      - VPN_SERVICE_PROVIDER=${GLUETUN_PROVIDER}
-      - VPN_TYPE=${GLUETUN_TYPE}
-      - OPENVPN_USER=${GLUETUN_USER}
-      - OPENVPN_PASSWORD=${GLUETUN_PASSWORD}
-      - TZ=Europe/Amsterdam
-      - SERVER_COUNTRIES=${GLUETUN_COUNTRIES}
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
     volumes:
-      - ${CONFIG}/gluetunp:/gluetun
+      - ./config:/config
+      - ${CONFIG}/ts/state/n8n:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
       - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     restart: always
   prowlarrvpn:
     image: linuxserver/prowlarr:2.3.5
     container_name: prowlarrvpn
-    network_mode: service:gluetunp
+    network_mode: service:tailscale
     volumes:
       - ${CONFIG}/prowlarrvpn:/config
-    restart: always
     depends_on:
-      - gluetunp
+      tailscale:
+        condition: service_healthy
+    restart: always
