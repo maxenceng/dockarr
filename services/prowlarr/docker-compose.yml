@@ -2,7 +2,7 @@ services:
   tailscale:
     image: tailscale/tailscale:v1.88.4
     container_name: tailscale-prowlarrts
-    hostname: prowlarr{SUFFIX}
+    hostname: prowlarr
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
       - TS_STATE_DIR=/var/lib/tailscale
