@@ -1,8 +1,8 @@
 services:
   tailscale:
     image: tailscale/tailscale:v1.88.4
-    container_name: tailscale-prowlarrvpn
-    hostname: prowlarrvpn
+    container_name: tailscale-prowlarr
+    hostname: prowlarr
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
       - TS_STATE_DIR=/var/lib/tailscale
@@ -14,7 +14,7 @@ services:
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
     volumes:
       - ./config:/config
-      - ${CONFIG}/ts/state/prowlarrvpn:/var/lib/tailscale
+      - ${CONFIG}/ts/state/prowlarr:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
@@ -26,12 +26,12 @@ services:
       retries: 3
       start_period: 10s
     restart: always
-  prowlarrvpn:
+  prowlarr:
     image: linuxserver/prowlarr:2.3.5
-    container_name: prowlarrvpn
+    container_name: prowlarr
     network_mode: service:tailscale
     volumes:
-      - ${CONFIG}/prowlarrvpn:/config
+      - ${CONFIG}/prowlarr:/config
     depends_on:
       tailscale:
         condition: service_healthy
