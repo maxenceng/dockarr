@@ -18,11 +18,12 @@ services:
     cap_add:
       - NET_ADMIN
     restart: always
-  prowlarr:
+  prowlarrvpn:
     image: linuxserver/prowlarr:2.3.5
-    container_name: prowlarr
+    container_name: prowlarrvpn
+    network_mode: service:gluetun
     volumes:
-      - ${CONFIG}/prowlarr:/config
+      - ${CONFIG}/prowlarrvpn:/config
     restart: always
     depends_on:
       - gluetunp
