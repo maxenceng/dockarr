@@ -14,7 +14,7 @@ services:
       - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
     volumes:
       - ./config:/config
-      - ${CONFIG}/ts/state/n8n:/var/lib/tailscale
+      - ${CONFIG}/ts/state/prowlarrvpn:/var/lib/tailscale
     devices:
       - /dev/net/tun:/dev/net/tun
     cap_add:
