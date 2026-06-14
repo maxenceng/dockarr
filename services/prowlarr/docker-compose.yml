@@ -1,17 +1,9 @@
 services:
-  prowlarrvpn:
-    image: linuxserver/prowlarr:2.3.5
-    container_name: prowlarrvpn
-    volumes:
-      - ${CONFIG}/prowlarrvpn:/config
-    restart: always
-    depends_on:
-      - gluetunp
   gluetunp:
     image: qmcgaw/gluetun
     container_name: gluetunp
     ports:
-      - "9696:9696/tcp"
+      - "9696:9696"
     environment:
       - VPN_SERVICE_PROVIDER=${GLUETUN_PROVIDER}
       - VPN_TYPE=${GLUETUN_TYPE}
@@ -26,3 +18,11 @@ services:
     cap_add:
       - NET_ADMIN
     restart: always
+  prowlarr:
+    image: linuxserver/prowlarr:2.3.5
+    container_name: prowlarr
+    volumes:
+      - ${CONFIG}/prowlarr:/config
+    restart: always
+    depends_on:
+      - gluetunp
