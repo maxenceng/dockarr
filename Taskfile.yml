@@ -32,6 +32,9 @@ tasks:
   servarr-up:
     cmd: docker compose up -d
     dir: services/servarr
+  prowlarr-up:
+    cmd: docker compose up -d
+    dir: services/prowlarr
   mealie-up:
     cmd: docker compose up -d
     dir: services/mealie
@@ -104,6 +107,9 @@ tasks:
   servarr-down:
     cmd: docker compose down
     dir: services/servarr
+  prowlarr-down:
+    cmd: docker compose down
+    dir: services/prowlarr
   mealie-down:
     cmd: docker compose down
     dir: services/mealie
