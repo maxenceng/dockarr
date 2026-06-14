@@ -21,7 +21,7 @@ services:
   prowlarrvpn:
     image: linuxserver/prowlarr:2.3.5
     container_name: prowlarrvpn
-    network_mode: service:gluetun
+    network_mode: service:gluetunp
     volumes:
       - ${CONFIG}/prowlarrvpn:/config
     restart: always
