@@ -3,7 +3,7 @@ services:
     image: qmcgaw/gluetun
     container_name: gluetunp
     ports:
-      - "9696:9696"
+      - "9898:9696"
     environment:
       - VPN_SERVICE_PROVIDER=${GLUETUN_PROVIDER}
       - VPN_TYPE=${GLUETUN_TYPE}
