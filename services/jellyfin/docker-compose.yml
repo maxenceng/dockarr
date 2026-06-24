@@ -29,7 +29,7 @@ services:
       start_period: 10s
     restart: always
   jellyfin:
-    image: linuxserver/jellyfin:10.11.11
+    image: linuxserver/jellyfin:10.10.7
     network_mode: service:tailscale
     container_name: jellyfin
     environment:
