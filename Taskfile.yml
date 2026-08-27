@@ -1,153 +1,62 @@
-version: 3
+version: '3'
 
 dotenv:
   - .env
   - .homepage.env
 
+vars:
+  STACK_SERVICES: pihole,transmission,joal,stirling,servarr,mealie,vaultwarden,jellyfin,jellyseerr,home-assistant,portainer,file-gator,n8n,wiki,homepage,gitea
+
 tasks:
+  default:
+    desc: List available tasks
+    silent: true
+    cmds:
+      - task --list
+
   install:
+    desc: Bootstrap Docker, Tailscale and the dockarr network on a fresh host
+    dir: install
     cmds:
       - chmod +x docker.sh
       - chmod +x tailscale.sh
       - sh docker.sh
       - docker network create dockarr
       - sh joal-setup.sh
-    dir: install
-  pihole-up:
-    cmds:
-      - docker compose up -d
-    dir: services/pihole
-  transmission-up:
-    cmd: docker compose up -d
-    dir: services/transmission
-  joal-up:
-    cmd: docker compose up -d
-    dir: services/joal
-  cloudbeaver-up:
-    cmd: docker compose up -d
-    dir: services/cloudbeaver
-  stirling-up:
-    cmd: docker compose up -d
-    dir: services/stirling
-  servarr-up:
-    cmd: docker compose up -d
-    dir: services/servarr
-  prowlarr-up:
-    cmd: docker compose up -d
-    dir: services/prowlarr
-  mealie-up:
-    cmd: docker compose up -d
-    dir: services/mealie
-  vaultwarden-up:
-    cmd: docker compose up -d
-    dir: services/vaultwarden
-  jellyfin-up:
-    cmd: docker compose up -d
-    dir: services/jellyfin
-  jellyseerr-up:
-    cmd: docker compose up -d
-    dir: services/jellyseerr
-  home-assistant-up:
-    cmd: docker compose up -d
-    dir: services/home-assistant
-  portainer-up:
-    cmd: docker compose up -d
-    dir: services/portainer
-  file-gator-up:
-    cmd: docker compose up -d
-    dir: services/file-gator
-  n8n-up:
-    cmds:
-      - docker compose build
-      - docker compose up -d
-    dir: services/n8n
-  wiki-up:
-    cmd: docker compose up -d
-    dir: services/wiki
-  homepage-up:
-    cmd: docker compose up -d
-    dir: services/homepage
-  gitea-up:
-    cmd: docker compose up -d
-    dir: services/gitea
-  start:
-    cmds:
-      - task pihole-up
-      - task transmission-up
-      - task joal-up
-      - task stirling-up
-      - task servarr-up
-      - task mealie-up
-      - task vaultwarden-up
-      - task jellyfin-up
-      - task jellyseerr-up
-      - task home-assistant-up
-      - task portainer-up
-      - task file-gator-up
-      - task n8n-up
-      - task wiki-up
-      - task homepage-up
-      - task gitea-up
+
   setup-config:
+    desc: Generate homepage and home-assistant config
+    dir: config
     cmds:
       - sh homepage-setup.sh
       - sh home-assistant-setup.sh
-    dir: config
-  pihole-down:
+
+  '*-up':
+    vars:
+      SERVICE: '{{index .MATCH 0}}'
+    dir: 'services/{{.SERVICE}}'
+    cmd: docker compose up -d
+
+  '*-down':
+    vars:
+      SERVICE: '{{index .MATCH 0}}'
+    dir: 'services/{{.SERVICE}}'
     cmd: docker compose down
-    dir: services/pihole
-  transmission-down:
-    cmd: docker compose down
-    dir: services/transmission
-  joal-down:
-    cmd: docker compose down
-    dir: services/joal
-  cloudbeaver-down:
-    cmd: docker compose down
-    dir: services/cloudbeaver
-  stirling-down:
-    cmd: docker compose down
-    dir: services/stirling
-  servarr-down:
-    cmd: docker compose down
-    dir: services/servarr
-  prowlarr-down:
-    cmd: docker compose down
-    dir: services/prowlarr
-  mealie-down:
-    cmd: docker compose down
-    dir: services/mealie
-  vaultwarden-down:
-    cmd: docker compose down
-    dir: services/vaultwarden
-  jellyfin-down:
-    cmd: docker compose down
-    dir: services/jellyfin
-  jellyseerr-down:
-    cmd: docker compose down
-    dir: services/jellyseerr
-  home-assistant-down:
-    cmd: docker compose down
-    dir: services/home-assistant
-  portainer-down:
-    cmd: docker compose down
-    dir: services/portainer
-  file-gator-down:
-    cmd: docker compose down
-    dir: services/file-gator
-  n8n-down:
-    cmd: docker compose down
+
+  n8n-up:
     dir: services/n8n
-  wiki-down:
-    cmd: docker compose down
-    dir: services/wiki
-  homepage-down:
-    cmd: docker compose down
-    dir: services/homepage
-  gitea-down:
-    cmd: docker compose down
-    dir: services/gitea
-  teardown:
     cmds:
-      - docker stop $(docker ps -aq)
-      - docker rm $(docker ps -aq)
+      - docker compose build
+      - docker compose up -d
+
+  start:
+    desc: Start every service in the dockarr stack
+    cmds:
+      - for: { var: STACK_SERVICES, split: ',' }
+        task: '{{.ITEM}}-up'
+
+  teardown:
+    desc: Stop and remove every container on the host
+    cmds:
+      - docker ps -aq | xargs -r docker stop
+      - docker ps -aq | xargs -r docker rm
