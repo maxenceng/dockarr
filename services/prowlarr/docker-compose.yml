@@ -1,6 +1,6 @@
 services:
   tailscale:
-    image: tailscale/tailscale:v1.88.4
+    image: tailscale/tailscale:v1.102.3
     container_name: tailscale-prowlarr
     hostname: prowlarr
     environment:
@@ -27,7 +27,7 @@ services:
       start_period: 10s
     restart: always
   prowlarr:
-    image: linuxserver/prowlarr:2.3.5
+    image: linuxserver/prowlarr:2.5.2
     container_name: prowlarr
     network_mode: service:tailscale
     volumes:

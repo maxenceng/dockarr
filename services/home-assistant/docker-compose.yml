@@ -2,7 +2,7 @@
 
 services:
   tailscale:
-    image: tailscale/tailscale:v1.88.4
+    image: tailscale/tailscale:v1.102.3
     container_name: tailscale-home-assistant
     hostname: home-assistant${SUFFIX}
     environment:

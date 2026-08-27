@@ -1,16 +1,16 @@
 services:
   joal:
-    image: anthonyraymond/joal:latest
+    image: anthonyraymond/joal:2.1.37
     container_name: joal
     network_mode: service:gluetun
     volumes:
       - ${CONFIG}/joal:/data
-    command: ["--joal-conf=/data", "--spring.main.web-environment=true", "--server.port=1234", "--joal.ui.path.prefix=seed", "--joal.ui.secret-token=abc"]
+    command: ["--joal-conf=/data", "--spring.main.web-environment=true", "--server.port=1234", "--joal.ui.path.prefix=seed", "--joal.ui.secret-token=${JOAL_SECRET_TOKEN}"]
     restart: always
     depends_on:
       - gluetun
   gluetun:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:v3.41.3
     container_name: gluetun-joal
     ports:
       - "1234:1234/tcp"

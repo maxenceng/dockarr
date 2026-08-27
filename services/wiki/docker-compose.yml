@@ -1,6 +1,6 @@
 services:
   tailscale:
-    image: tailscale/tailscale:v1.88.4
+    image: tailscale/tailscale:v1.102.3
     container_name: tailscale-wiki
     hostname: wiki${SUFFIX}
     environment:
@@ -27,7 +27,7 @@ services:
       start_period: 10s
     restart: always
   wiki:
-    image: requarks/wiki:2.5
+    image: requarks/wiki:2.5.314
     network_mode: service:tailscale
     container_name: wiki
     environment:
