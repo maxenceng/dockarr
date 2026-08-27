@@ -161,11 +161,11 @@
           type: vikunja
           url: http://vikunja:3456
           key: VIKUNJA_KEY
-    - AnythingLLM:
-        icon: anything-llm.svg
-        href: ANYTHINGLLM_HREF
-        description: Docs & Memory
-        siteMonitor: http://anythingllm:3001
+    - Qdrant:
+        icon: qdrant.svg
+        href: QDRANT_HREF
+        description: Session Memory
+        siteMonitor: http://qdrant:6333
     - Joal:
         icon: joplin.svg
         href: JOAL_HREF
