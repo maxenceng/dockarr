@@ -152,6 +152,20 @@
           type: gitea
           url: http://gitea:3000
           key: GITEA_KEY
+    - Vikunja:
+        icon: vikunja.svg
+        href: VIKUNJA_HREF
+        description: Ticket Tracker
+        siteMonitor: http://vikunja:3456
+        widget:
+          type: vikunja
+          url: http://vikunja:3456
+          key: VIKUNJA_KEY
+    - AnythingLLM:
+        icon: anything-llm.svg
+        href: ANYTHINGLLM_HREF
+        description: Docs & Memory
+        siteMonitor: http://anythingllm:3001
     - Joal:
         icon: joplin.svg
         href: JOAL_HREF

@@ -1,0 +1,61 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.102.3
+    container_name: tailscale-anythingllm
+    hostname: anythingllm${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ./config:/config
+      - ${CONFIG}/ts/state/anythingllm:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  # Shares the tailscale sidecar's network namespace with anythingllm (both set
+  # network_mode: service:tailscale) so they reach each other over 127.0.0.1 without
+  # relying on cross-project Docker DNS, which doesn't work once TS_ACCEPT_DNS takes
+  # over resolution in this namespace. Bound to loopback only and never given a
+  # serve.json route, so it is not reachable from the tailnet at all -- anything bound
+  # in this namespace would otherwise be reachable tailnet-wide by MagicDNS hostname
+  # regardless of serve.json (see homepage reaching wiki:3000 with no such route).
+  qdrant:
+    image: qdrant/qdrant:v1.19.0
+    network_mode: service:tailscale
+    container_name: qdrant
+    environment:
+      - QDRANT__SERVICE__HOST=127.0.0.1
+    volumes:
+      - ${CONFIG}/qdrant:/qdrant/storage
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    restart: always
+  anythingllm:
+    image: mintplexlabs/anythingllm:1.16.1
+    network_mode: service:tailscale
+    container_name: anythingllm
+    environment:
+      - STORAGE_DIR=/app/server/storage
+    volumes:
+      - ${CONFIG}/anythingllm:/app/server/storage
+    depends_on:
+      tailscale:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    restart: always
