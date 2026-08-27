@@ -1,0 +1,45 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.102.3
+    container_name: tailscale-gitea-runner
+    hostname: gitea-runner${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ${CONFIG}/ts/state/gitea-runner:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  gitea-runner:
+    # Note: gitea/act_runner is deprecated in favor of gitea/runner (currently
+    # at v3.x), but that image targets newer Gitea server releases. Pinned
+    # here to the last 0.x release for compatibility with gitea:1.27.2 in
+    # ../gitea/docker-compose.yml. Bump both together if you upgrade Gitea.
+    image: gitea/act_runner:0.6.1
+    network_mode: service:tailscale
+    container_name: gitea-runner
+    environment:
+      GITEA_INSTANCE_URL: https://gitea${SUFFIX}.${TS_DOMAIN}
+      GITEA_RUNNER_REGISTRATION_TOKEN: ${GITEA_RUNNER_REGISTRATION_TOKEN}
+      GITEA_RUNNER_NAME: dockarr-runner
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${CONFIG}/gitea-runner:/data
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    restart: always

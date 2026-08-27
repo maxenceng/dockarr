@@ -5,7 +5,7 @@ dotenv:
   - .homepage.env
 
 vars:
-  STACK_SERVICES: pihole,transmission,joal,stirling,servarr,mealie,vaultwarden,jellyfin,jellyseerr,home-assistant,portainer,file-gator,n8n,wiki,homepage,gitea
+  STACK_SERVICES: pihole,transmission,joal,stirling,servarr,mealie,vaultwarden,jellyfin,jellyseerr,home-assistant,portainer,file-gator,n8n,wiki,homepage,gitea,gitea-runner
 
 tasks:
   default:
