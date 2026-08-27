@@ -1,0 +1,46 @@
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.102.3
+    container_name: tailscale-gitea
+    hostname: gitea${SUFFIX}
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    volumes:
+      - ./config:/config
+      - ${CONFIG}/ts/state/gitea:/var/lib/tailscale
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always
+  gitea:
+    image: gitea/gitea:1.27.2
+    network_mode: service:tailscale
+    container_name: gitea
+    environment:
+      USER_UID: 1000
+      USER_GID: 1000
+      TZ: Europe/Amsterdam
+      GITEA__server__DOMAIN: gitea${SUFFIX}.${TS_DOMAIN}
+      GITEA__server__ROOT_URL: https://gitea${SUFFIX}.${TS_DOMAIN}/
+      GITEA__server__DISABLE_SSH: "true"
+      GITEA__service__DISABLE_REGISTRATION: "true"
+    volumes:
+      - ${CONFIG}/gitea:/data
+    depends_on:
+      tailscale:
+        condition: service_healthy
+    restart: always

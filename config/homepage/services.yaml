@@ -143,6 +143,15 @@
           url: http://portainer:9000
           env: 3
           key: PORTAINER_KEY
+    - Gitea:
+        icon: gitea.svg
+        href: GITEA_HREF
+        description: Git Server
+        siteMonitor: http://gitea:3000
+        widget:
+          type: gitea
+          url: http://gitea:3000
+          key: GITEA_KEY
     - Joal:
         icon: joplin.svg
         href: JOAL_HREF

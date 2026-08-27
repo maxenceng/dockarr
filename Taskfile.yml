@@ -67,6 +67,9 @@ tasks:
   homepage-up:
     cmd: docker compose up -d
     dir: services/homepage
+  gitea-up:
+    cmd: docker compose up -d
+    dir: services/gitea
   start:
     cmds:
       - task pihole-up
@@ -84,6 +87,7 @@ tasks:
       - task n8n-up
       - task wiki-up
       - task homepage-up
+      - task gitea-up
   setup-config:
     cmds:
       - sh homepage-setup.sh
@@ -140,6 +144,9 @@ tasks:
   homepage-down:
     cmd: docker compose down
     dir: services/homepage
+  gitea-down:
+    cmd: docker compose down
+    dir: services/gitea
   teardown:
     cmds:
       - docker stop $(docker ps -aq)

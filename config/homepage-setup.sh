@@ -58,3 +58,6 @@ sed -i "s@WIKI_HREF@$WIKI_HREF@g" $CONFIG/homepage/services.yaml
 
 sed -i "s@JACKETT_HREF@$JACKETT_HREF@g" $CONFIG/homepage/services.yaml
 sed -i "s@JACKETT_KEY@$JACKETT_KEY@g" $CONFIG/homepage/services.yaml
+
+sed -i "s@GITEA_HREF@$GITEA_HREF@g" $CONFIG/homepage/services.yaml
+sed -i "s@GITEA_KEY@$GITEA_KEY@g" $CONFIG/homepage/services.yaml
