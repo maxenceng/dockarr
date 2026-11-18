@@ -1,6 +1,6 @@
 services:
   tailscale:
-    image: tailscale/tailscale:v1.102.3
+    image: tailscale/tailscale:v1.104.7
     container_name: tailscale-gitea
     hostname: gitea${SUFFIX}
     environment:
@@ -27,7 +27,7 @@ services:
       start_period: 10s
     restart: always
   gitea:
-    image: gitea/gitea:1.27.2
+    image: gitea/gitea:28.4.0
     network_mode: service:tailscale
     container_name: gitea
     environment:

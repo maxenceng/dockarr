@@ -1,6 +1,6 @@
 services:
   tailscale:
-    image: tailscale/tailscale:v1.102.3
+    image: tailscale/tailscale:v1.104.7
     container_name: tailscale-qdrant
     hostname: qdrant${SUFFIX}
     environment:
@@ -31,7 +31,7 @@ services:
   # directly over HTTPS, there's no sibling container calling it locally. Qdrant has no
   # auth by default, so QDRANT_API_KEY gates every request once it's tailnet-reachable.
   qdrant:
-    image: qdrant/qdrant:v1.19.0
+    image: qdrant/qdrant:v1.20.2
     network_mode: service:tailscale
     container_name: qdrant
     environment:

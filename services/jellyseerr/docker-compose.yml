@@ -2,7 +2,7 @@
 
 services:
   tailscale:
-    image: tailscale/tailscale:v1.102.3
+    image: tailscale/tailscale:v1.104.7
     container_name: tailscale-jellyseerr
     hostname: jellyseerr${SUFFIX}
     environment:
@@ -29,7 +29,7 @@ services:
       start_period: 10s
     restart: always
   jellyseerr:
-    image: ghcr.io/seerr-team/seerr:v3.4.1
+    image: ghcr.io/seerr-team/seerr:v3.5.2
     init: true
     network_mode: service:tailscale
     container_name: jellyseerr

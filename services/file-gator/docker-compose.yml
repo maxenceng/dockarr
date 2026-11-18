@@ -1,6 +1,6 @@
 services:
   file-gator:
-    image: filegator/filegator:v7.15.1
+    image: filegator/filegator:v7.16.9
     container_name: file-gator
     networks:
       - dockarr
