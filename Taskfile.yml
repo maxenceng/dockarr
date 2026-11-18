@@ -49,6 +49,13 @@ tasks:
       - docker compose build
       - docker compose up -d
 
+  'migrate-*':
+    desc: 'Back up and upgrade a service across a breaking version (task migrate-jellyfin, add -- --check for preflight only)'
+    interactive: true
+    vars:
+      SERVICE: '{{index .MATCH 0}}'
+    cmd: bash migrate/{{.SERVICE}}.sh {{.CLI_ARGS}}
+
   start:
     desc: Start every service in the dockarr stack
     cmds:
