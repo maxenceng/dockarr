@@ -15,8 +15,9 @@ cd "$REPO_ROOT"
 for envfile in .env .homepage.env; do
   if [ -f "$envfile" ]; then
     set -a
+    # Strip CR: the env files may have Windows line endings, which would leave "\r" in every value.
     # shellcheck disable=SC1090
-    . "./$envfile"
+    . <(tr -d '\r' < "./$envfile")
     set +a
   fi
 done
