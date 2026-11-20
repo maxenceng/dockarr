@@ -29,7 +29,7 @@ services:
       start_period: 10s
     restart: always
   home-assistant:
-    image: linuxserver/homeassistant:2025.8.3
+    image: linuxserver/homeassistant:2026.11.2
     network_mode: service:tailscale
     container_name: home-assistant
     privileged: true

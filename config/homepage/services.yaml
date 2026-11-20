@@ -123,7 +123,7 @@
         icon: pi-hole.svg
         href: PIHOLE_HREF
         description: DNS AdBlocker
-        siteMonitor: http://pihole
+        siteMonitor: http://pihole/admin/
         widget:
           type: pihole
           url: http://pihole

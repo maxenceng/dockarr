@@ -1,6 +1,6 @@
 services:
   cloudbeaver:
-    image: dbeaver/cloudbeaver:25.2.3
+    image: dbeaver/cloudbeaver:26.2.5
     container_name: cloudbeaver
     volumes:
       - ${CONFIG}/cloudbeaver:/opt/cloudbeaver/workspace
