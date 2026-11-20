@@ -10,14 +10,14 @@ SVC=stirling
 CONTAINER=stirlingpdf   # compose service key is "stirling" ($SVC)
 IMAGE=frooodle/s-pdf
 TARGET=3.3.0
-DATA="$CONFIG/stirling"
+APP_DIR="$CONFIG/stirling"
 
 current="$(current_image $SVC $IMAGE)"; current_tag="${current#*:}"
 [ -n "$current" ] || die "could not find $IMAGE in $(compose_file $SVC)"
 if [ "$current_tag" = "$TARGET" ]; then ok "already on $IMAGE:$TARGET"; exit 0; fi
 
 step "Preflight: Stirling-PDF $current_tag -> $TARGET"
-[ -d "$DATA" ] || die "$DATA does not exist"
+[ -d "$APP_DIR" ] || die "$APP_DIR does not exist"
 require_running $CONTAINER
 ok "no breaking config changes apply to this compose file"
 
@@ -26,8 +26,8 @@ end_of_checks
 step "Stopping Stirling-PDF"
 compose $SVC stop $SVC
 
-step "Backing up $DATA"
-backup $SVC "$DATA"
+step "Backing up $APP_DIR"
+backup $SVC "$APP_DIR"
 
 step "Upgrading image"
 set_image $SVC $IMAGE $TARGET
@@ -35,7 +35,7 @@ compose $SVC pull -q $SVC
 compose $SVC up -d $SVC
 wait_healthy $CONTAINER 600
 
-print_rollback $SVC "$DATA" $IMAGE "$current_tag"
+print_rollback $SVC "$APP_DIR" $IMAGE "$current_tag"
 cat <<MSG
 
     Check the new UI loads through the tailnet URL and run one tool (e.g. merge)

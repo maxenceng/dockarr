@@ -10,7 +10,7 @@ source "$(dirname "$0")/lib.sh"
 SVC=jellyfin
 IMAGE=linuxserver/jellyfin
 TARGET=12.4ubu2604-ls60
-DATA="$CONFIG/jellyfin"
+APP_DIR="$CONFIG/jellyfin"
 
 current="$(current_image $SVC $IMAGE)"; current_tag="${current#*:}"
 [ -n "$current" ] || die "could not find $IMAGE in $(compose_file $SVC)"
@@ -23,7 +23,7 @@ case "$current_tag" in
   *) die "$current_tag is not supported for a direct upgrade; move to 10.11.x first" ;;
 esac
 
-[ -d "$DATA" ] || die "$DATA does not exist"
+[ -d "$APP_DIR" ] || die "$APP_DIR does not exist"
 require_running $SVC
 
 # Seerr must already speak the new Jellyfin auth headers (seerr v3.5.0, PR #3502).
@@ -38,7 +38,7 @@ else
 fi
 
 # Third-party plugins live in data/plugins (bundled ones ship inside the image).
-mapfile -t plugins < <(docker run --rm -v "$DATA:/d:ro" alpine:3 \
+mapfile -t plugins < <(docker run --rm -v "$APP_DIR:/d:ro" alpine:3 \
   sh -c '[ -d /d/data/plugins ] && find /d/data/plugins -mindepth 1 -maxdepth 1 -type d ! -name configurations -exec basename {} \;' || true)
 if [ "${#plugins[@]}" -gt 0 ]; then
   warn "third-party plugins installed (they will be moved aside after the backup):"
@@ -48,7 +48,7 @@ else
 fi
 
 # The plugin repository must be the stable one.
-repo_urls="$(docker run --rm -v "$DATA:/d:ro" alpine:3 sh -c '
+repo_urls="$(docker run --rm -v "$APP_DIR:/d:ro" alpine:3 sh -c '
   f=$(find /d -maxdepth 2 -name system.xml | head -1)
   [ -n "$f" ] && sed -n "/<PluginRepositories>/,/<\/PluginRepositories>/p" "$f" | grep -o "<Url>[^<]*" | cut -c6-')"
 if grep -qi 'unstable' <<< "$repo_urls"; then
@@ -58,7 +58,7 @@ else
   ok "plugin repositories: $(tr '\n' ' ' <<< "$repo_urls")"
 fi
 
-need_kb=$(docker run --rm -v "$DATA:/d:ro" alpine:3 sh -c 'du -sk --exclude=./cache /d 2>/dev/null || du -sk /d' | cut -f1)
+need_kb=$(docker run --rm -v "$APP_DIR:/d:ro" alpine:3 sh -c 'du -sk --exclude=./cache /d 2>/dev/null || du -sk /d' | cut -f1)
 mkdir -p "$BACKUP_DIR"
 free_kb=$(df -Pk "$BACKUP_DIR" | awk 'NR==2 {print $4}')
 if [ "$free_kb" -lt "$need_kb" ]; then
@@ -72,16 +72,16 @@ end_of_checks
 step "Stopping Jellyfin"
 compose $SVC stop $SVC
 
-step "Backing up $DATA (cache excluded)"
-backup $SVC "$DATA" ./cache
+step "Backing up $APP_DIR (cache excluded)"
+backup $SVC "$APP_DIR" ./cache
 
 if [ "${#plugins[@]}" -gt 0 ]; then
   step "Moving third-party plugins aside"
   aside="plugins-before-12-$STAMP"
-  docker run --rm -v "$DATA:/d" alpine:3 sh -c "
+  docker run --rm -v "$APP_DIR:/d" alpine:3 sh -c "
     mkdir -p /d/data/$aside &&
     for p in \"\$@\"; do mv \"/d/data/plugins/\$p\" /d/data/$aside/; done" _ "${plugins[@]}"
-  ok "moved to $DATA/data/$aside (reinstall compatible versions from the catalogue later)"
+  ok "moved to $APP_DIR/data/$aside (reinstall compatible versions from the catalogue later)"
 fi
 
 step "Upgrading image"
@@ -109,7 +109,7 @@ else
   warn "JELLYFIN_KEY not set; run Dashboard -> Libraries -> Scan All Libraries manually"
 fi
 
-print_rollback $SVC "$DATA" $IMAGE "$current_tag"
+print_rollback $SVC "$APP_DIR" $IMAGE "$current_tag"
 cat <<EOF
 
     After the scan finishes:

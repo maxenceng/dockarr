@@ -8,7 +8,7 @@ SVC=n8n
 IMAGE=n8nio/n8n
 HOP1=2.49.1
 HOP2=3.3.0
-DATA="$CONFIG/n8n"
+APP_DIR="$CONFIG/n8n"
 DB=database.sqlite
 
 current="$(current_image $SVC $IMAGE)"; current_tag="${current#*:}"
@@ -23,9 +23,9 @@ case "$current_tag" in
   *)   die "unexpected current version $current_tag" ;;
 esac
 
-[ -f "$DATA/$DB" ] || die "$DATA/$DB not found (this script assumes the default SQLite database)"
-[ -f "$DATA/config" ] && ok "encryption key file present ($DATA/config); it goes into the backup" \
-  || warn "$DATA/config not found: make sure you know where N8N_ENCRYPTION_KEY is kept"
+[ -f "$APP_DIR/$DB" ] || die "$APP_DIR/$DB not found (this script assumes the default SQLite database)"
+[ -f "$APP_DIR/config" ] && ok "encryption key file present ($APP_DIR/config); it goes into the backup" \
+  || warn "$APP_DIR/config not found: make sure you know where N8N_ENCRYPTION_KEY is kept"
 
 # Scan stored workflows for things the 2.0 / 3.0 releases changed or removed.
 scan() { # scan <message> <sql LIKE pattern>...
@@ -33,8 +33,8 @@ scan() { # scan <message> <sql LIKE pattern>...
   local where="" p
   for p in "$@"; do where+="${where:+ OR }nodes LIKE '$p'"; done
   local hits
-  hits="$(sqlite_query "$DATA" "$DB" "SELECT name FROM workflow_entity WHERE $where ORDER BY name;")" \
-    || die "could not read $DATA/$DB"
+  hits="$(sqlite_query "$APP_DIR" "$DB" "SELECT name FROM workflow_entity WHERE $where ORDER BY name;")" \
+    || die "could not read $APP_DIR/$DB"
   if [ -n "$hits" ]; then
     warn "$msg"
     sed 's/^/        - /' <<< "$hits"
@@ -75,8 +75,8 @@ hop() {
   step "Stopping n8n ($from)"
   compose $SVC stop $SVC
 
-  step "Backing up $DATA"
-  backup "$SVC-$from" "$DATA"
+  step "Backing up $APP_DIR"
+  backup "$SVC-$from" "$APP_DIR"
 
   step "Upgrading to $tag"
   set_image $SVC $IMAGE "$tag"
@@ -85,7 +85,7 @@ hop() {
 
   wait_healthy $SVC 900 docker exec $SVC node -e \
     "fetch('http://localhost:5678/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-  print_rollback $SVC "$DATA" $IMAGE "$from"
+  print_rollback $SVC "$APP_DIR" $IMAGE "$from"
 }
 
 case "$current_tag" in

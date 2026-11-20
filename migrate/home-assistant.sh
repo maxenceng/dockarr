@@ -8,14 +8,14 @@ SVC=home-assistant
 CONTAINER=home-assistant
 IMAGE=linuxserver/homeassistant
 TARGET=2026.11.2
-DATA="$CONFIG/home-assistant"
+APP_DIR="$CONFIG/home-assistant"
 
 current="$(current_image $SVC $IMAGE)"; current_tag="${current#*:}"
 [ -n "$current" ] || die "could not find $IMAGE in $(compose_file $SVC)"
 if [ "$current_tag" = "$TARGET" ]; then ok "already on $IMAGE:$TARGET"; exit 0; fi
 
 step "Preflight: Home Assistant $current_tag -> $TARGET"
-[ -d "$DATA" ] || die "$DATA does not exist"
+[ -d "$APP_DIR" ] || die "$APP_DIR does not exist"
 require_running $CONTAINER
 
 # 2025.12: 32-bit architectures dropped. 2026.3: images use zstd layers (Docker 23+).
@@ -32,11 +32,11 @@ else
 fi
 
 # Scan the YAML config (UI-made automations are stored in automations.yaml too).
-yaml_files=$(docker run --rm -v "$DATA:/d:ro" alpine:3 \
+yaml_files=$(docker run --rm -v "$APP_DIR:/d:ro" alpine:3 \
   find /d -maxdepth 3 -name '*.yaml' ! -path '*/.storage/*' ! -path '*/custom_components/*' ! -path '*/deps/*' ! -path '*/themes/*')
 check_yaml() { # check_yaml <message> <grep -E pattern>
   local hits
-  hits="$(docker run --rm -v "$DATA:/d:ro" alpine:3 grep -nE "$2" $yaml_files 2>/dev/null | sed 's#^/d/##' || true)"
+  hits="$(docker run --rm -v "$APP_DIR:/d:ro" alpine:3 grep -nE "$2" $yaml_files 2>/dev/null | sed 's#^/d/##' || true)"
   if [ -n "$hits" ]; then
     warn "$1"
     sed 's/^/        /' <<< "$hits"
@@ -58,7 +58,7 @@ check_yaml "2026.6/2026.7 renamed purpose-specific trigger/condition keys and be
   '^\s*-?\s*(trigger|condition):\s*[a-z_]+\.[a-z_]+'
 
 # 2026.10: usernames are forced to lowercase with no surrounding spaces.
-users="$(cat_as_root "$DATA" .storage/auth_provider.homeassistant 2>/dev/null \
+users="$(cat_as_root "$APP_DIR" .storage/auth_provider.homeassistant 2>/dev/null \
   | grep -oE '"username": *"[^"]*"' | sed -E 's/.*: *"(.*)"/\1/' || true)"
 bad_users="$(grep -E '[A-Z]|^ | $' <<< "$users" || true)"
 if [ -n "$bad_users" ]; then
@@ -68,7 +68,7 @@ else
   ok "usernames are already lowercase"
 fi
 
-if docker run --rm -v "$DATA:/d:ro" alpine:3 test -d /d/custom_components/hacs; then
+if docker run --rm -v "$APP_DIR:/d:ro" alpine:3 test -d /d/custom_components/hacs; then
   info "HACS is installed; 2026.11 migrates it to the built-in Marketplace on first start"
 fi
 
@@ -77,8 +77,8 @@ end_of_checks
 step "Stopping Home Assistant"
 compose $SVC stop $CONTAINER
 
-step "Backing up $DATA"
-backup $SVC "$DATA" ./deps ./tts
+step "Backing up $APP_DIR"
+backup $SVC "$APP_DIR" ./deps ./tts
 
 step "Upgrading image"
 set_image $SVC $IMAGE $TARGET
@@ -88,7 +88,7 @@ compose $SVC up -d $CONTAINER
 step "Waiting for Home Assistant (database migrations run on first start)"
 wait_healthy $CONTAINER 1800
 
-print_rollback $SVC "$DATA" $IMAGE "$current_tag"
+print_rollback $SVC "$APP_DIR" $IMAGE "$current_tag"
 cat <<EOF
 
     Now, before anything else:
