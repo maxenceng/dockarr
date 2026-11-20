@@ -43,9 +43,11 @@ services:
     volumes:
       - ${CONFIG}/etc-pihole:/etc/pihole
       - ${CONFIG}/etc-dnsmasq.d:/etc/dnsmasq.d
+    # service_started, not service_healthy: pihole is the tailnet DNS, and newer tailscale
+    # reports unhealthy while that DNS is unreachable, so waiting for healthy deadlocks.
     depends_on:
       tailscale:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: [ "CMD", "pgrep", "-f", "pihole-FTL" ]
       interval: 1m
