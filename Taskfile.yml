@@ -5,7 +5,17 @@ dotenv:
   - .homepage.env
 
 vars:
-  STACK_SERVICES: pihole,transmission,stirling,servarr,mealie,vaultwarden,jellyfin,jellyseerr,home-assistant,portainer,file-gator,n8n,wiki,homepage,qdrant,embeddings,prowlarr
+  # Which stack runs Prowlarr, set with PROWLARR_STACK in .env:
+  #   servarr  (default) inside services/servarr, published on the host with the other *arr apps
+  #   prowlarr           the standalone services/prowlarr stack, behind a Tailscale sidecar
+  PROWLARR_IN: '{{.PROWLARR_STACK | default "servarr"}}'
+  # Every stack under services/, except pihole (`start` brings it up first) and the Prowlarr stack when unused.
+  STACKS:
+    sh: ls -1 services | grep -vx pihole{{if ne .PROWLARR_IN "prowlarr"}} | grep -vx prowlarr{{end}}
+
+env:
+  # Turns on the prowlarr service inside services/servarr.
+  COMPOSE_PROFILES: '{{if eq .PROWLARR_IN "servarr"}}prowlarr{{end}}'
 
 tasks:
   default:
@@ -18,22 +28,24 @@ tasks:
     desc: Bootstrap Docker, Tailscale and the dockarr network on a fresh host
     dir: install
     cmds:
-      - chmod +x docker.sh
-      - chmod +x tailscale.sh
-      - sh docker.sh
-      - docker network create dockarr
+      - bash docker.sh
+      - bash tailscale.sh
+      - docker network inspect dockarr >/dev/null 2>&1 || docker network create dockarr
 
   setup-config:
     desc: Generate homepage and home-assistant config
     dir: config
     cmds:
-      - sh homepage-setup.sh
-      - sh home-assistant-setup.sh
+      - bash homepage-setup.sh
+      - bash home-assistant-setup.sh
 
   '*-up':
     vars:
       SERVICE: '{{index .MATCH 0}}'
     dir: 'services/{{.SERVICE}}'
+    preconditions:
+      - sh: '[ "{{.SERVICE}}" != prowlarr ] || [ "{{.PROWLARR_IN}}" = prowlarr ]'
+        msg: 'Prowlarr runs inside servarr on this host. Set PROWLARR_STACK=prowlarr in .env to use the standalone stack.'
     cmd: docker compose up -d
 
   '*-down':
@@ -41,12 +53,6 @@ tasks:
       SERVICE: '{{index .MATCH 0}}'
     dir: 'services/{{.SERVICE}}'
     cmd: docker compose down
-
-  n8n-up:
-    dir: services/n8n
-    cmds:
-      - docker compose build
-      - docker compose up -d
 
   'migrate-*':
     desc: 'Back up and upgrade a service across a breaking version (task migrate-jellyfin, add -- --check for preflight only)'
@@ -56,13 +62,18 @@ tasks:
     cmd: bash migrate/{{.SERVICE}}.sh {{.CLI_ARGS}}
 
   start:
-    desc: Start every service in the dockarr stack
+    desc: Start Pi-hole, then every other stack
+    preconditions:
+      - sh: '[ "{{.PROWLARR_IN}}" = servarr ] || [ "{{.PROWLARR_IN}}" = prowlarr ]'
+        msg: 'PROWLARR_STACK must be "servarr" or "prowlarr", got "{{.PROWLARR_IN}}".'
     cmds:
-      - for: { var: STACK_SERVICES, split: ',' }
+      - task: pihole-up
+      - for: { var: STACKS }
         task: '{{.ITEM}}-up'
 
   teardown:
-    desc: Stop and remove every container on the host
+    desc: Stop and remove every dockarr stack (other containers on the host are left alone)
     cmds:
-      - docker ps -aq | xargs -r docker stop
-      - docker ps -aq | xargs -r docker rm
+      - for: { var: STACKS }
+        task: '{{.ITEM}}-down'
+      - task: pihole-down

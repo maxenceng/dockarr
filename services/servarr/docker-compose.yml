@@ -47,8 +47,11 @@ services:
     restart: always
     ports:
       - "8878:7878"
+  # Only started when PROWLARR_STACK=servarr (the default); the Taskfile enables this profile.
+  # With PROWLARR_STACK=prowlarr, services/prowlarr runs it behind Tailscale instead.
   prowlarr:
     image: linuxserver/prowlarr:3.0.2
+    profiles: [prowlarr]
     container_name: prowlarr
     networks:
       - dockarr

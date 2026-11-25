@@ -44,10 +44,12 @@ Taskfile.yml                         task runner entry point
    - `DATA`: media library root (`movies/`, `tv/`, `movies-anime/`, `tv-anime/`).
    - `DOWNLOADS`: Transmission download directory.
    - `TS_AUTHKEY` and `TS_DOMAIN`: Tailscale auth key and tailnet domain.
+   - `PROWLARR_STACK`: where Prowlarr runs. `servarr` (default) runs it inside the `servarr` stack with
+     the other *arr apps. `prowlarr` runs the standalone `services/prowlarr` stack behind Tailscale instead.
    - `TZ`, `PUID` and `PGID`: timezone and the user/group the containers write files as. They are required;
      `docker compose` refuses to start a stack that uses them if they're missing.
    - `.homepage.env` holds the URLs and API keys for the Homepage widgets.
-2. On a fresh host, install Docker and Tailscale, then create the `dockarr` network:
+2. On a fresh host, install Docker and Tailscale, then create the `dockarr` network (safe to re-run):
    ```sh
    task install
    ```
@@ -55,10 +57,9 @@ Taskfile.yml                         task runner entry point
    ```sh
    task setup-config
    ```
-4. Start the stacks. Start Pi-hole first, because the other Tailscale sidecars use it as their DNS:
+4. Start the stacks:
    ```sh
-   task pihole-up
-   task start            # every service listed in STACK_SERVICES
+   task start            # Pi-hole first (the other sidecars use it as DNS), then every stack in services/
    ```
 
 ## Usage
@@ -68,11 +69,12 @@ task                  # list tasks
 task <service>-up     # create or update one stack (e.g. task jellyfin-up)
 task <service>-down   # stop and remove one stack
 task start            # bring up every stack
-task teardown         # stop and remove every container on the host
+task teardown         # stop and remove every dockarr stack
 ```
 
 To upgrade a service, change the image tag in its compose file, then run `task <service>-up`.
 Image tags are always pinned to exact versions.
+A new directory under `services/` is picked up by `task start` and `task teardown` automatically.
 The Tailscale image is set once, in `common/tailscale.yml`.
 
 ## Breaking upgrades
