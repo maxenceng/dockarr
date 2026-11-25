@@ -1,0 +1,26 @@
+# Tailscale sidecar shared by every stack that sits behind Tailscale.
+# Each stack pulls it in with `extends` and adds its own container_name, hostname and volumes
+# (volumes stay in the stack file: relative paths here would resolve against this directory).
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.104.7
+    environment:
+      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
+      - TS_STATE_DIR=/var/lib/tailscale
+      - TS_SERVE_CONFIG=/config/serve.json
+      - TS_USERSPACE=false
+      - TS_ACCEPT_DNS=true
+      - TS_ENABLE_HEALTH_CHECK=true
+      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
+      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: always

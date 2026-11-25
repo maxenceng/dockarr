@@ -25,6 +25,7 @@ These stacks have no Tailscale sidecar and publish their ports on the host: `ser
 ```
 services/<name>/docker-compose.yml   one stack per service
 services/<name>/config/serve.json    Tailscale serve config for the sidecar
+common/tailscale.yml                 shared Tailscale sidecar, pulled into each stack with `extends`
 config/                              Homepage and Home Assistant config templates
 install/                             host bootstrap (Docker, Tailscale)
 migrate/                             upgrade scripts for breaking version bumps
@@ -70,6 +71,7 @@ task teardown         # stop and remove every container on the host
 
 To upgrade a service, change the image tag in its compose file, then run `task <service>-up`.
 Image tags are always pinned to exact versions.
+The Tailscale image is set once, in `common/tailscale.yml`.
 
 ## Breaking upgrades
 

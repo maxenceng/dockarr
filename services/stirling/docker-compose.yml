@@ -2,32 +2,14 @@
 
 services:
   tailscale:
-    image: tailscale/tailscale:v1.104.7
+    extends:
+      file: ../../common/tailscale.yml
+      service: tailscale
     container_name: tailscale-stirling
-    hostname: stirling${SUFFIX}
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}?ephemeral=false
-      - TS_STATE_DIR=/var/lib/tailscale
-      - TS_SERVE_CONFIG=/config/serve.json
-      - TS_USERSPACE=false
-      - TS_ACCEPT_DNS=true
-      - TS_ENABLE_HEALTH_CHECK=true
-      - TS_LOCAL_ADDR_PORT=127.0.0.1:41234
-      - TS_EXTRA_ARGS=--advertise-tags=tag:container --reset
+    hostname: stirling
     volumes:
       - ./config:/config
       - ${CONFIG}/ts/state/stirling:/var/lib/tailscale
-    devices:
-      - /dev/net/tun:/dev/net/tun
-    cap_add:
-      - NET_ADMIN
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://127.0.0.1:41234/healthz" ]
-      interval: 1m
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-    restart: always
   stirling:
     image: frooodle/s-pdf:3.3.0
     network_mode: service:tailscale
