@@ -43,7 +43,6 @@ sed -i "s@CLOUD_BEAVER_HREF@$CLOUD_BEAVER_HREF@g" $CONFIG/homepage/services.yaml
 sed -i "s@PORTAINER_HREF@$PORTAINER_HREF@g" $CONFIG/homepage/services.yaml
 sed -i "s@PORTAINER_KEY@$PORTAINER_KEY@g" $CONFIG/homepage/services.yaml
 
-sed -i "s@JOAL_HREF@$JOAL_HREF@g" $CONFIG/homepage/services.yaml
 
 sed -i "s@FILEGATOR_HREF@$FILEGATOR_HREF@g" $CONFIG/homepage/services.yaml
 
@@ -59,10 +58,6 @@ sed -i "s@WIKI_HREF@$WIKI_HREF@g" $CONFIG/homepage/services.yaml
 sed -i "s@JACKETT_HREF@$JACKETT_HREF@g" $CONFIG/homepage/services.yaml
 sed -i "s@JACKETT_KEY@$JACKETT_KEY@g" $CONFIG/homepage/services.yaml
 
-sed -i "s@GITEA_HREF@$GITEA_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@GITEA_KEY@$GITEA_KEY@g" $CONFIG/homepage/services.yaml
 
-sed -i "s@VIKUNJA_HREF@$VIKUNJA_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@VIKUNJA_KEY@$VIKUNJA_KEY@g" $CONFIG/homepage/services.yaml
 
 sed -i "s@QDRANT_HREF@$QDRANT_HREF@g" $CONFIG/homepage/services.yaml

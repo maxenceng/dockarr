@@ -12,14 +12,13 @@ on the tailnet (`https://<service>.<tailnet>.ts.net`) without exposing ports on 
 | Area | Services |
 |---|---|
 | Media | Jellyfin, Seerr (`jellyseerr`), Transmission, Sonarr, Radarr, Prowlarr, Bazarr, Jackett, FlareSolverr (`servarr`) |
-| Network | Pi-hole (tailnet DNS), joal (behind gluetun) |
-| Home | Home Assistant, Mealie, Vikunja, Homepage |
+| Network | Pi-hole (tailnet DNS) |
+| Home | Home Assistant, Mealie, Homepage |
 | Tools | Stirling-PDF, FileGator, Wiki.js, n8n, CloudBeaver, Portainer, Vaultwarden |
-| Dev | Gitea, Gitea Actions runner |
 | AI | Qdrant, text-embeddings-inference (`embeddings`) |
 
 These stacks have no Tailscale sidecar and publish their ports on the host: `servarr`,
-`transmission`, `file-gator`, `cloudbeaver` and `joal`.
+`transmission`, `file-gator` and `cloudbeaver`.
 
 ## Layout
 
@@ -27,7 +26,7 @@ These stacks have no Tailscale sidecar and publish their ports on the host: `ser
 services/<name>/docker-compose.yml   one stack per service
 services/<name>/config/serve.json    Tailscale serve config for the sidecar
 config/                              Homepage and Home Assistant config templates
-install/                             host bootstrap (Docker, Tailscale, joal)
+install/                             host bootstrap (Docker, Tailscale)
 migrate/                             upgrade scripts for breaking version bumps
 Taskfile.yml                         task runner entry point
 ```

@@ -5,7 +5,7 @@ dotenv:
   - .homepage.env
 
 vars:
-  STACK_SERVICES: pihole,transmission,joal,stirling,servarr,mealie,vaultwarden,jellyfin,jellyseerr,home-assistant,portainer,file-gator,n8n,wiki,homepage,gitea,gitea-runner,vikunja,qdrant,embeddings,prowlarr
+  STACK_SERVICES: pihole,transmission,stirling,servarr,mealie,vaultwarden,jellyfin,jellyseerr,home-assistant,portainer,file-gator,n8n,wiki,homepage,qdrant,embeddings,prowlarr
 
 tasks:
   default:
@@ -22,7 +22,6 @@ tasks:
       - chmod +x tailscale.sh
       - sh docker.sh
       - docker network create dockarr
-      - sh joal-setup.sh
 
   setup-config:
     desc: Generate homepage and home-assistant config
