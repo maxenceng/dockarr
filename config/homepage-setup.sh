@@ -1,63 +1,25 @@
 #!/bin/bash
+# Copies the Homepage config into $CONFIG/homepage and fills in every placeholder
+# listed in .homepage.env.example with its value from the environment (Task loads .homepage.env).
+set -euo pipefail
 
-cp homepage/* $CONFIG/homepage/
-sed -i "s@IMAGE_PATH@$IMAGE_PATH@g" $CONFIG/homepage/settings.yaml
+: "${CONFIG:?CONFIG is not set (see .env)}"
+dest="$CONFIG/homepage"
+mkdir -p "$dest"
+cp homepage/* "$dest/"
 
-sed -i "s@JELLYSEERR_HREF@$JELLYSEERR_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@JELLYSEERR_KEY@$JELLYSEERR_KEY@g" $CONFIG/homepage/services.yaml
+# Escape a value for the replacement side of a sed s@...@...@ expression.
+escape() { printf '%s' "$1" | sed -e 's/[\\&@]/\\&/g'; }
 
-sed -i "s@JELLYFIN_HREF@$JELLYFIN_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@JELLYFIN_KEY@$JELLYFIN_KEY@g" $CONFIG/homepage/services.yaml
+missing=()
+while IFS='=' read -r name _; do
+  name="${name%$'\r'}"
+  [ -n "$name" ] || continue
+  if [ -z "${!name:-}" ]; then missing+=("$name"); continue; fi
+  # \b keeps SONARR_HREF from matching inside SONARR_ANIME_HREF.
+  sed -i "s@\b$name\b@$(escape "${!name}")@g" "$dest/settings.yaml" "$dest/services.yaml"
+done < ../.homepage.env.example
 
-sed -i "s@SONARR_HREF@$SONARR_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@SONARR_KEY@$SONARR_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@SONARR_ANIME_HREF@$SONARR_ANIME_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@SONARR_ANIME_KEY@$SONARR_ANIME_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@RADARR_HREF@$RADARR_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@RADARR_KEY@$RADARR_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@RADARR_ANIME_HREF@$RADARR_ANIME_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@RADARR_ANIME_KEY@$RADARR_ANIME_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@PROWLARR_HREF@$PROWLARR_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@PROWLARR_KEY@$PROWLARR_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@TRANSMISSION_HREF@$TRANSMISSION_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@TRANSMISSION_KEY@$TRANSMISSION_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@BAZARR_HREF@$BAZARR_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@BAZARR_KEY@$BAZARR_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@STIRLING_HREF@$STIRLING_HREF@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@HOME_ASSISTANT_HREF@$HOME_ASSISTANT_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@HOME_ASSISTANT_KEY@$HOME_ASSISTANT_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@PIHOLE_HREF@$PIHOLE_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@PIHOLE_KEY@$PIHOLE_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@CLOUD_BEAVER_HREF@$CLOUD_BEAVER_HREF@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@PORTAINER_HREF@$PORTAINER_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@PORTAINER_KEY@$PORTAINER_KEY@g" $CONFIG/homepage/services.yaml
-
-
-sed -i "s@FILEGATOR_HREF@$FILEGATOR_HREF@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@MEALIE_HREF@$MEALIE_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@MEALIE_KEY@$MEALIE_KEY@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@VAULTWARDEN_HREF@$VAULTWARDEN_HREF@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@N8N_HREF@$N8N_HREF@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@WIKI_HREF@$WIKI_HREF@g" $CONFIG/homepage/services.yaml
-
-sed -i "s@JACKETT_HREF@$JACKETT_HREF@g" $CONFIG/homepage/services.yaml
-sed -i "s@JACKETT_KEY@$JACKETT_KEY@g" $CONFIG/homepage/services.yaml
-
-
-
-sed -i "s@QDRANT_HREF@$QDRANT_HREF@g" $CONFIG/homepage/services.yaml
+if [ "${#missing[@]}" -gt 0 ]; then
+  echo "Not set in .homepage.env, left as placeholders: ${missing[*]}" >&2
+fi
