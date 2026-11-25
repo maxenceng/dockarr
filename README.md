@@ -96,6 +96,7 @@ Point it at a different disk when `$CONFIG` is short on space.
 - The Pi-hole stack waits for its Tailscale sidecar to *start*, not to be *healthy*. Tailscale
   reports unhealthy while its DNS server (Pi-hole itself) is unreachable, so waiting for healthy
   would deadlock.
-- Several compose and env files use CRLF line endings. Docker Compose and Task handle them;
-  scripts that source the env files must strip the `\r` (see `migrate/lib.sh`).
+- Every file in the repo uses LF line endings (enforced by `.gitattributes`). The git-ignored
+  `.env` files may still have CRLF line endings on an existing host. Docker Compose and Task handle that,
+  but scripts that source them must strip the `\r` (see `migrate/lib.sh`).
 - `.env` and `.homepage.env` contain secrets and are git-ignored.
