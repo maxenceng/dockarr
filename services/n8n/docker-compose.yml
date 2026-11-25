@@ -13,7 +13,7 @@ services:
     network_mode: service:tailscale
     container_name: n8n
     environment:
-      - TZ=Europe/London
+      - TZ=${TZ:?TZ is not set (see .env)}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - N8N_RUNNERS_ENABLED=true
       - N8N_SECURE_COOKIE=false

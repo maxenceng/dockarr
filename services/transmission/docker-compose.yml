@@ -4,9 +4,9 @@ services:
     container_name: transmission
     network_mode: service:gluetun
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Amsterdam
+      - PUID=${PUID:?PUID is not set (see .env)}
+      - PGID=${PGID:?PGID is not set (see .env)}
+      - TZ=${TZ:?TZ is not set (see .env)}
     volumes:
       - ${CONFIG}/transmission:/config
       - ${DOWNLOADS}:/downloads
@@ -28,7 +28,7 @@ services:
       - VPN_TYPE=${GLUETUN_TYPE}
       - OPENVPN_USER=${GLUETUN_USER}
       - OPENVPN_PASSWORD=${GLUETUN_PASSWORD}
-      - TZ=Europe/Amsterdam
+      - TZ=${TZ:?TZ is not set (see .env)}
       - SERVER_COUNTRIES=${GLUETUN_COUNTRIES}
     volumes:
       - ${CONFIG}/gluetun:/gluetun

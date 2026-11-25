@@ -44,6 +44,8 @@ Taskfile.yml                         task runner entry point
    - `DATA`: media library root (`movies/`, `tv/`, `movies-anime/`, `tv-anime/`).
    - `DOWNLOADS`: Transmission download directory.
    - `TS_AUTHKEY` and `TS_DOMAIN`: Tailscale auth key and tailnet domain.
+   - `TZ`, `PUID` and `PGID`: timezone and the user/group the containers write files as. They are required;
+     `docker compose` refuses to start a stack that uses them if they're missing.
    - `.homepage.env` holds the URLs and API keys for the Homepage widgets.
 2. On a fresh host, install Docker and Tailscale, then create the `dockarr` network:
    ```sh

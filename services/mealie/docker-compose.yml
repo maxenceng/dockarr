@@ -16,9 +16,9 @@ services:
     container_name: mealie
     environment:
       ALLOW_SIGNUP: "false"
-      PUID: 1000
-      PGID: 1000
-      TZ: Europe/Amsterdam
+      PUID: ${PUID:?PUID is not set (see .env)}
+      PGID: ${PGID:?PGID is not set (see .env)}
+      TZ: ${TZ:?TZ is not set (see .env)}
     volumes:
       - ${CONFIG}/mealie:/app/data
     depends_on:

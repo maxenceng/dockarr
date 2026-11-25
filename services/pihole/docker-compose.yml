@@ -19,9 +19,7 @@ services:
     network_mode: service:tailscale
     container_name: pihole
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Amsterdam
+      - TZ=${TZ:?TZ is not set (see .env)}
     volumes:
       - ${CONFIG}/etc-pihole:/etc/pihole
       - ${CONFIG}/etc-dnsmasq.d:/etc/dnsmasq.d

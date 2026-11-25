@@ -16,9 +16,9 @@ services:
     container_name: home-assistant
     privileged: true
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Amsterdam
+      - PUID=${PUID:?PUID is not set (see .env)}
+      - PGID=${PGID:?PGID is not set (see .env)}
+      - TZ=${TZ:?TZ is not set (see .env)}
     volumes:
       - ${CONFIG}/home-assistant:/config
     depends_on:

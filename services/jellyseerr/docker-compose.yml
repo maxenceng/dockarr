@@ -16,10 +16,9 @@ services:
     network_mode: service:tailscale
     container_name: jellyseerr
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Europe/Amsterdam
-      - LOG_LEVEL=debug
+      - PUID=${PUID:?PUID is not set (see .env)}
+      - PGID=${PGID:?PGID is not set (see .env)}
+      - TZ=${TZ:?TZ is not set (see .env)}
       - PORT=5055
     volumes:
       - ${CONFIG}/jellyseerr:/app/config
